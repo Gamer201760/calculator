@@ -1,14 +1,22 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import Enum
-from typing import Union
-
-
-class TokenType(Enum):
-    NUMBER = 'NUMBER'
-    OPERATOR = 'OPERATOR'
 
 
 @dataclass
-class Token:
-    type: TokenType
-    value: Union[float, str]
+class Token(ABC):
+    """Базовый класс для всех токенов в RPN выражении"""
+
+    ...
+
+
+@dataclass
+class Number(Token):
+    value: float
+
+
+class Operator(Token, ABC):
+    @abstractmethod
+    def execute(self, a: float, b: float) -> float: ...
+
+    @abstractmethod
+    def symbol(self) -> str: ...

@@ -8,6 +8,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+    "mypy>=1.18.2",
     "ruff>=0.13.1",
 ]
 
@@ -44,7 +45,7 @@ exclude = [
 
 [tool.ruff.lint]
 select = ["F", "N", "I", "E", "W", "PL"]
-ignore = ["W191", "E501"]
+ignore = ["W191", "E501", "PLR2004"]
 
 
 [tool.ruff.format]

@@ -1,5 +1,10 @@
+from adapter.cli import CLIAdapter
+
+
 def main():
-    print('I am calc')
+    """Точка входа в программу"""
+    cli = CLIAdapter()
+    cli.run()
 
 
 if __name__ == '__main__':

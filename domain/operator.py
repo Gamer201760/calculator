@@ -1,41 +1,35 @@
-from typing import Protocol
+from domain.token import Operator
 
 
-class Operator(Protocol):
-    def execute(self, a: float, b: float) -> float: ...
-
-    def symbol(self) -> str: ...
-
-
-class AddOperator:
+class AddOperator(Operator):
     def execute(self, a: float, b: float) -> float:
         return a + b
 
     def symbol(self) -> str:
-        return "+"
+        return '+'
 
 
-class SubtractOperator:
+class SubtractOperator(Operator):
     def execute(self, a: float, b: float) -> float:
         return a - b
 
     def symbol(self) -> str:
-        return "-"
+        return '-'
 
 
-class MultiplyOperator:
+class MultiplyOperator(Operator):
     def execute(self, a: float, b: float) -> float:
         return a * b
 
     def symbol(self) -> str:
-        return "*"
+        return '*'
 
 
-class DivideOperator:
+class DivideOperator(Operator):
     def execute(self, a: float, b: float) -> float:
         if b == 0:
-            raise ValueError("Division by zero")
+            raise ValueError('Division by zero')
         return a / b
 
     def symbol(self) -> str:
-        return "/"
+        return '/'
