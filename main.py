@@ -1,7 +1,8 @@
 def calc(expr: str) -> list:
     stack = []
     for x in expr.split():
-        if x.isdigit():
+        x = x.replace("~", "-")
+        if x.replace("-", "").isdigit():
             stack.append(int(x))
         elif x == "+":
             stack.append(stack.pop() + stack.pop())
@@ -15,7 +16,7 @@ def calc(expr: str) -> list:
 
 
 def main():
-    print(calc("2 2 2 + /"))
+    print(calc("~3 4 6 + *"))
 
 
 if __name__ == "__main__":
