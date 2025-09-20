@@ -1,22 +1,24 @@
+OP = {
+    "+": lambda a, b: a + b,
+    "-": lambda a, b: a - b,
+    "/": lambda a, b: a // b,
+    "*": lambda a, b: a * b,
+}
+
+
 def calc(expr: str) -> list:
     stack = []
-    for x in expr.split():
-        x = x.replace("~", "-")
-        if x.replace("-", "").isdigit():
-            stack.append(int(x))
-        elif x == "+":
-            stack.append(stack.pop() + stack.pop())
-        elif x == "-":
-            stack.append(stack.pop() - stack.pop())
-        elif x == "*":
-            stack.append(stack.pop() * stack.pop())
-        elif x == "/":
-            stack.append(stack.pop() // stack.pop())
+    for token in expr.split():
+        token = token.replace("~", "-")
+        if token.replace("-", "").isdigit():
+            stack.append(int(token))
+        elif token in OP.keys():
+            stack.append(OP[token](stack.pop(), stack.pop()))
     return stack
 
 
 def main():
-    print(calc("~3 4 6 + *"))
+    print(calc("3 4 6 + *"))
 
 
 if __name__ == "__main__":
