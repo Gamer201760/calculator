@@ -13,7 +13,7 @@ class TokenParser(TokenParserInterface):
 
     def parse(self, expression: str) -> List[Token]:
         """Парсит строку в список токенов"""
-        tokens = []
+        tokens: List[Token] = []
         elements = expression.split()
 
         for element in elements:

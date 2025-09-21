@@ -2,10 +2,10 @@ from typing import Dict
 
 from domain.exception import InvalidTokenError
 from domain.operator import (
-    AddOperator,
-    DivideOperator,
-    MultiplyOperator,
-    SubtractOperator,
+    Add,
+    Divide,
+    Multiply,
+    Subtract,
 )
 from domain.token import Operator
 from usecase.interface import OperatorRepositoryInterface
@@ -15,10 +15,10 @@ class OperatorRepository(OperatorRepositoryInterface):
     """Репозиторий операторов"""
 
     _operators: Dict[str, Operator] = {
-        '+': AddOperator(),
-        '-': SubtractOperator(),
-        '*': MultiplyOperator(),
-        '/': DivideOperator(),
+        '+': Add(),
+        '-': Subtract(),
+        '*': Multiply(),
+        '/': Divide(),
     }
 
     def get_operator(self, symbol: str) -> Operator:

@@ -1,7 +1,7 @@
 from domain.token import Operator
 
 
-class AddOperator(Operator):
+class Add(Operator):
     def execute(self, a: float, b: float) -> float:
         return a + b
 
@@ -9,7 +9,7 @@ class AddOperator(Operator):
         return '+'
 
 
-class SubtractOperator(Operator):
+class Subtract(Operator):
     def execute(self, a: float, b: float) -> float:
         return a - b
 
@@ -17,7 +17,7 @@ class SubtractOperator(Operator):
         return '-'
 
 
-class MultiplyOperator(Operator):
+class Multiply(Operator):
     def execute(self, a: float, b: float) -> float:
         return a * b
 
@@ -25,7 +25,7 @@ class MultiplyOperator(Operator):
         return '*'
 
 
-class DivideOperator(Operator):
+class Divide(Operator):
     def execute(self, a: float, b: float) -> float:
         if b == 0:
             raise ValueError('Division by zero')
