@@ -2,10 +2,10 @@ from typing import List
 
 from domain.exception import InvalidTokenError
 from domain.token import Number, Token
-from usecase.interface import OperatorRepositoryInterface, TokenParserInterface
+from usecase.interface import OperatorRepositoryInterface
 
 
-class TokenParser(TokenParserInterface):
+class SpaceTokenParser:
     """Парсер токенов из строки"""
 
     def __init__(self, operator_repository: OperatorRepositoryInterface):

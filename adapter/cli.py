@@ -1,6 +1,6 @@
 from domain.exception import DomainError
 from repository.operator import OperatorRepository
-from repository.token_parser import TokenParser
+from repository.token_parser import SpaceTokenParser
 from usecase.rpn_calculator import RPNCalculatorUseCase
 
 
@@ -9,7 +9,7 @@ class CLIAdapter:
 
     def __init__(self):
         operator_repo = OperatorRepository()
-        token_parser = TokenParser(operator_repo)
+        token_parser = SpaceTokenParser(operator_repo)
         self._calculator = RPNCalculatorUseCase(token_parser)
 
     def run(self):

@@ -8,10 +8,9 @@ from domain.operator import (
     Subtract,
 )
 from domain.token import Operator
-from usecase.interface import OperatorRepositoryInterface
 
 
-class OperatorRepository(OperatorRepositoryInterface):
+class OperatorRepository:
     """Репозиторий операторов"""
 
     _operators: Dict[str, Operator] = {

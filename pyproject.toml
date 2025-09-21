@@ -6,12 +6,18 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
 
+
+
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
+    "pytest>=8.4.2",
     "ruff>=0.13.1",
 ]
 
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
 
 [tool.ruff]
 exclude = [
@@ -51,3 +57,4 @@ ignore = ["W191", "E501", "PLR2004"]
 [tool.ruff.format]
 exclude = ["list"]
 quote-style = "single"
+
