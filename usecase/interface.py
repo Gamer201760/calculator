@@ -1,9 +1,9 @@
 from typing import List, Protocol
 
-from domain.token import Operator, Token
+from domain.token import Token
 
 
-class TokenParserInterface(Protocol):
+class TokenizerInterface(Protocol):
     """Интерфейс для парсера токенов"""
 
     def parse(self, expression: str) -> List[Token]:
@@ -11,13 +11,7 @@ class TokenParserInterface(Protocol):
         ...
 
 
-class OperatorRepositoryInterface(Protocol):
-    """Интерфейс для репозитория операторов"""
+class RPNConverterInterface(Protocol):
+    """Интерфейс для преобразования списка токенов в обратную польскую последовательность"""
 
-    def get_operator(self, symbol: str) -> Operator:
-        """Возвращает оператор по символу"""
-        ...
-
-    def is_operator(self, symbol: str) -> bool:
-        """Проверяет, является ли символ оператором"""
-        ...
+    def convert(self, tokens: List[Token]) -> List[Token]: ...

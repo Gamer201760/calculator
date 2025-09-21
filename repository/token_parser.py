@@ -1,11 +1,22 @@
-from typing import List
+from typing import List, Protocol
 
 from domain.exception import InvalidTokenError
-from domain.token import Number, Token
-from usecase.interface import OperatorRepositoryInterface
+from domain.token import Number, Operator, Token
 
 
-class SpaceTokenParser:
+class OperatorRepositoryInterface(Protocol):
+    """Интерфейс для репозитория операторов"""
+
+    def get_operator(self, symbol: str) -> Operator:
+        """Возвращает оператор по символу"""
+        ...
+
+    def is_operator(self, symbol: str) -> bool:
+        """Проверяет, является ли символ оператором"""
+        ...
+
+
+class SpaceTokenizer:
     """Парсер токенов из строки"""
 
     def __init__(self, operator_repository: OperatorRepositoryInterface):
