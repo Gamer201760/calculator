@@ -7,7 +7,7 @@ from repository.rpn_converter import ShuntingYard
 logger = getLogger(__name__)
 
 
-def test_shuting_yard():
+def test_shunting_yard():
     converter = ShuntingYard()
     rpn = converter.convert(
         [
