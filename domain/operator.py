@@ -11,7 +11,7 @@ class Add(Operator):
 
 class Subtract(Operator):
     def execute(self, a: float, b: float) -> float:
-        return a - b
+        return b - a
 
     def symbol(self) -> str:
         return '-'
@@ -29,7 +29,7 @@ class Divide(Operator):
     def execute(self, a: float, b: float) -> float:
         if b == 0:
             raise ValueError('Division by zero')
-        return a / b
+        return b / a
 
     def symbol(self) -> str:
         return '/'

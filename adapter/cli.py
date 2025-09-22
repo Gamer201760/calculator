@@ -23,7 +23,7 @@ class CLIAdapter:
             try:
                 expression = input('> ').strip()
 
-                if expression.lower() in ['quit', 'exit', 'q']:
+                if expression.lower() in {'quit', 'exit', 'q'}:
                     print('Goodbye!')
                     break
 
