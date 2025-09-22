@@ -1,9 +1,16 @@
-from adapter.cli import CLIAdapter
+import argparse
+
+from adapter.cli import SpaceInfixCalculator, SpaceRPNCalculator
 
 
 def main():
     """Точка входа в программу"""
-    cli = CLIAdapter()
+    parser = argparse.ArgumentParser(
+        prog='Calculator',
+    )
+    parser.add_argument('--rpn', action='store_true')
+    args = parser.parse_args()
+    cli = SpaceRPNCalculator() if args.rpn else SpaceInfixCalculator()
     cli.run()
 
 
