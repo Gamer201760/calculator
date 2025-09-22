@@ -1,5 +1,6 @@
 from domain.exception import DomainError
 from repository.operator import OperatorRepository
+from repository.rpn_converter import ShuntingYard
 from repository.token_parser import SpaceTokenizer
 from usecase.rpn_calculator import RPNCalculatorUseCase
 
@@ -10,7 +11,8 @@ class CLIAdapter:
     def __init__(self):
         operator_repo = OperatorRepository()
         token_parser = SpaceTokenizer(operator_repo)
-        self._calculator = RPNCalculatorUseCase(token_parser)
+        converter = ShuntingYard()
+        self.calculator = RPNCalculatorUseCase(token_parser, converter)
 
     def run(self):
         """Запускает интерактивный режим"""
@@ -28,7 +30,7 @@ class CLIAdapter:
                 if not expression:
                     continue
 
-                result = self._calculator.calculate(expression)
+                result = self.calculator.calculate(expression)
                 print(f'Result: {result}')
 
             except DomainError as e:
