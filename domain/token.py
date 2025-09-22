@@ -14,6 +14,14 @@ class Number(Token):
     value: float
 
 
+class LeftParen(Token):
+    """Левая скобка"""
+
+
+class RightParen(Token):
+    """Правая скобка"""
+
+
 class Operator(Token, ABC):
     @abstractmethod
     def execute(self, a: float, b: float) -> float: ...

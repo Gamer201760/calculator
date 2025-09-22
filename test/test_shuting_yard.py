@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from domain.operator import Add, Multiply
-from domain.token import Number
+from domain.token import LeftParen, Number, RightParen
 from repository.rpn_converter import ShuntingYard
 
 logger = getLogger(__name__)
@@ -11,17 +11,20 @@ def test_shuting_yard():
     converter = ShuntingYard()
     rpn = converter.convert(
         [
+            LeftParen(),
             Number(3),
             Add(),
             Number(4),
+            RightParen(),
             Multiply(),
             Number(10),
         ]
     )
+    logger.debug(rpn)
     assert rpn == [
         Number(3),
         Number(4),
+        Add(),
         Number(10),
         Multiply(),
-        Add(),
     ]

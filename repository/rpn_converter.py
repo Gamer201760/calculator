@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from domain.token import Number, Operator, Token
+from domain.token import LeftParen, Number, Operator, RightParen, Token
 
 
 class ShuntingYard:
@@ -26,11 +26,12 @@ class ShuntingYard:
         Входные токены могут быть:
         - Number: числа
         - Operator: операторы (+, -, *, /, ^)
+        - LeftParen/RightParen: скобки
 
-        Возвращает Number и Operator токены в RPN порядке
+        Возвращает Number и Operator токены в RPN порядке (скобки исключаются)
         """
         output_queue: List[Token] = []
-        operator_stack: List[Operator] = []
+        operator_stack: List = []
 
         for token in tokens:
             if isinstance(token, Number):
@@ -39,15 +40,36 @@ class ShuntingYard:
 
             elif isinstance(token, Operator):
                 # Обрабатываем операторы согласно приоритету и ассоциативности
-                while operator_stack and self._should_pop_operator(
-                    token, operator_stack[-1]
+                while (
+                    operator_stack
+                    and isinstance(operator_stack[-1], Operator)
+                    and self._should_pop_operator(token, operator_stack[-1])
                 ):
                     output_queue.append(operator_stack.pop())
 
                 operator_stack.append(token)
 
+            elif isinstance(token, LeftParen):
+                # Левые скобки всегда помещаются в стек
+                operator_stack.append(token)
+
+            elif isinstance(token, RightParen):
+                # Правые скобки: выталкиваем операторы до левой скобки
+                while operator_stack and not isinstance(operator_stack[-1], LeftParen):
+                    output_queue.append(operator_stack.pop())
+
+                # Удаляем левую скобку из стека (она не попадает в выход)
+                if operator_stack and isinstance(operator_stack[-1], LeftParen):
+                    operator_stack.pop()
+                else:
+                    raise ValueError(
+                        'Несбалансированные скобки: не найдена левая скобка'
+                    )
+
         # Выталкиваем все оставшиеся операторы из стека
         while operator_stack:
+            if isinstance(operator_stack[-1], LeftParen):
+                raise ValueError('Несбалансированные скобки: лишняя левая скобка')
             output_queue.append(operator_stack.pop())
 
         return output_queue
