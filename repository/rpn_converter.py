@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from domain.operator import Add, Divide, Multiply, Subtract
-from domain.token import LeftParen, Number, Operator, RightParen, Token
+from domain.token import LParen, Number, Operator, RParen, Token
 
 
 class ShuntingYard:
@@ -54,17 +54,17 @@ class ShuntingYard:
 
                 operator_stack.append(token)
 
-            elif isinstance(token, LeftParen):
+            elif isinstance(token, LParen):
                 # Левые скобки всегда помещаются в стек
                 operator_stack.append(token)
 
-            elif isinstance(token, RightParen):
+            elif isinstance(token, RParen):
                 # Правые скобки: выталкиваем операторы до левой скобки
-                while operator_stack and not isinstance(operator_stack[-1], LeftParen):
+                while operator_stack and not isinstance(operator_stack[-1], LParen):
                     output_queue.append(operator_stack.pop())
 
                 # Удаляем левую скобку из стека (она не попадает в выход)
-                if operator_stack and isinstance(operator_stack[-1], LeftParen):
+                if operator_stack and isinstance(operator_stack[-1], LParen):
                     operator_stack.pop()
                 else:
                     raise ValueError(
@@ -73,7 +73,7 @@ class ShuntingYard:
 
         # Выталкиваем все оставшиеся операторы из стека
         while operator_stack:
-            if isinstance(operator_stack[-1], LeftParen):
+            if isinstance(operator_stack[-1], LParen):
                 raise ValueError('Несбалансированные скобки: лишняя левая скобка')
             output_queue.append(operator_stack.pop())
 

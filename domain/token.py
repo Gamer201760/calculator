@@ -6,23 +6,25 @@ from dataclasses import dataclass
 class Token(ABC):
     """Базовый класс для всех токенов в RPN выражении"""
 
-    ...
-
 
 @dataclass
 class Number(Token):
+    """Токен числа"""
+
     value: float
 
 
-class LeftParen(Token):
-    """Левая скобка"""
+class LParen(Token):
+    """Токен левой скобки"""
 
 
-class RightParen(Token):
-    """Правая скобка"""
+class RParen(Token):
+    """Токен правой скобки"""
 
 
 class Operator(Token, ABC):
+    """Интерфейс токена для бинарных операторов"""
+
     _symbol: str
 
     @abstractmethod

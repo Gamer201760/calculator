@@ -1,7 +1,7 @@
 from typing import List, Protocol
 
 from domain.exception import InvalidTokenError
-from domain.token import LeftParen, Number, Operator, RightParen, Token
+from domain.token import LParen, Number, Operator, RParen, Token
 
 
 class OperatorRepositoryInterface(Protocol):
@@ -31,9 +31,9 @@ class SpaceTokenizer:
             if self._is_number(element):
                 tokens.append(Number(float(element)))
             elif element == '(':
-                tokens.append(LeftParen())
+                tokens.append(LParen())
             elif element == ')':
-                tokens.append(RightParen())
+                tokens.append(RParen())
             elif self._operator_repository.is_operator(element):
                 operator = self._operator_repository.get_operator(element)
                 tokens.append(operator)
