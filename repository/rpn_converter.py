@@ -1,22 +1,27 @@
 from typing import Dict, List
 
+from domain.operator import Add, Divide, Multiply, Subtract
 from domain.token import LeftParen, Number, Operator, RightParen, Token
 
 
 class ShuntingYard:
     """Алгоритм сортировочной станции для преобразования инфиксной записи в обратную польскую последовательность"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Приоритет операторов (чем больше число, тем выше приоритет)
-        self.precedence: Dict[str, int] = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
+        self.precedence: Dict[Operator, int] = {
+            Add(): 1,
+            Subtract(): 1,
+            Multiply(): 2,
+            Divide(): 2,
+        }
 
         # Ассоциативность операторов (True - левая, False - правая)
-        self.left_associative: Dict[str, bool] = {
-            '+': True,
-            '-': True,
-            '*': True,
-            '/': True,
-            '^': False,  # возведение в степень правоассоциативно
+        self.left_associative: Dict[Operator, bool] = {
+            Add(): True,
+            Subtract(): True,
+            Multiply(): True,
+            Divide(): True,
         }
 
     def convert(self, tokens: List) -> List[Token]:
@@ -78,20 +83,15 @@ class ShuntingYard:
         """
         Определяет, нужно ли вытолкнуть оператор из стека
         """
-        current_symbol = current_op.symbol()
-        stack_symbol = stack_op.symbol()
-
-        current_prec = self.precedence.get(current_symbol, 0)
-        stack_prec = self.precedence.get(stack_symbol, 0)
+        current_prec = self.precedence.get(current_op, 0)
+        stack_prec = self.precedence.get(stack_op, 0)
 
         # Если приоритет оператора в стеке больше
         if stack_prec > current_prec:
             return True
 
         # Если приоритеты равны и текущий оператор левоассоциативен
-        if stack_prec == current_prec and self.left_associative.get(
-            current_symbol, True
-        ):
+        if stack_prec == current_prec and self.left_associative.get(current_op, True):
             return True
 
         return False

@@ -2,34 +2,30 @@ from domain.token import Operator
 
 
 class Add(Operator):
+    _symbol = '+'
+
     def execute(self, a: float, b: float) -> float:
         return a + b
 
-    def symbol(self) -> str:
-        return '+'
-
 
 class Subtract(Operator):
+    _symbol = '-'
+
     def execute(self, a: float, b: float) -> float:
         return b - a
 
-    def symbol(self) -> str:
-        return '-'
-
 
 class Multiply(Operator):
+    _symbol = '*'
+
     def execute(self, a: float, b: float) -> float:
         return a * b
 
-    def symbol(self) -> str:
-        return '*'
-
 
 class Divide(Operator):
+    _symbol = '/'
+
     def execute(self, a: float, b: float) -> float:
-        if b == 0:
+        if a == 0:
             raise ValueError('Division by zero')
         return b / a
-
-    def symbol(self) -> str:
-        return '/'

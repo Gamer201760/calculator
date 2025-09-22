@@ -23,8 +23,13 @@ class RightParen(Token):
 
 
 class Operator(Token, ABC):
+    _symbol: str
+
     @abstractmethod
     def execute(self, a: float, b: float) -> float: ...
 
-    @abstractmethod
-    def symbol(self) -> str: ...
+    def get_symbol(self) -> str:
+        return self._symbol
+
+    def __hash__(self) -> int:
+        return hash(self._symbol)
