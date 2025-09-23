@@ -36,3 +36,31 @@ class Pow(Operator):
 
     def execute(self, a: float, b: float) -> float:
         return b**a
+
+
+class IntegerDivide(Operator):
+    _symbol = '//'
+
+    def execute(self, a: float, b: float) -> float:
+        if a == 0:
+            raise ValueError('Division by zero')
+
+        # Проверяем, что оба числа целые
+        if not (a.is_integer() and b.is_integer()):
+            raise TypeError('Integer division requires integer operands')
+
+        return float(int(b) // int(a))
+
+
+class Modulo(Operator):
+    _symbol = '%'
+
+    def execute(self, a: float, b: float) -> float:
+        if a == 0:
+            raise ValueError('Modulo by zero')
+
+        # Проверяем, что оба числа целые
+        if not (a.is_integer() and b.is_integer()):
+            raise TypeError('Modulo operation requires integer operands')
+
+        return float(int(b) % int(a))

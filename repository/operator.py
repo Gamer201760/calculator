@@ -1,13 +1,7 @@
 from typing import Dict
 
 from domain.exception import InvalidTokenError
-from domain.operator import (
-    Add,
-    Divide,
-    Multiply,
-    Pow,
-    Subtract,
-)
+from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import Operator
 
 
@@ -19,6 +13,8 @@ class OperatorRepository:
         '-': Subtract(),
         '*': Multiply(),
         '/': Divide(),
+        '//': IntegerDivide(),
+        '%': Modulo(),
         '^': Pow(),
     }
 

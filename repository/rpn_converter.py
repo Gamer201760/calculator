@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from domain.operator import Add, Divide, Multiply, Pow, Subtract
+from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import LParen, Number, Operator, RParen, Token
 
 
@@ -14,6 +14,8 @@ class ShuntingYard:
             Subtract(): 1,
             Multiply(): 2,
             Divide(): 2,
+            Modulo(): 2,
+            IntegerDivide(): 2,
             Pow(): 3,
         }
 
@@ -23,6 +25,8 @@ class ShuntingYard:
             Subtract(): True,
             Multiply(): True,
             Divide(): True,
+            Modulo(): True,
+            IntegerDivide(): True,
             Pow(): False,
         }
 

@@ -2,7 +2,7 @@ from random import randint
 
 import pytest
 
-from domain.operator import Add, Divide, Multiply, Pow, Subtract
+from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 
 
 def test_symbol_add():
@@ -28,6 +28,16 @@ def test_symbol_mul():
 def test_symbol_pow():
     pow = Pow()
     assert pow.get_symbol() == '^'
+
+
+def test_symbol_integer_div():
+    div = IntegerDivide()
+    assert div.get_symbol() == '//'
+
+
+def test_symbol_modulo():
+    mod = Modulo()
+    assert mod.get_symbol() == '%'
 
 
 def test_add():
@@ -73,7 +83,23 @@ def test_mul():
 
 def test_pow():
     pow = Pow()
-    a = randint(0, 100000) / 100
-    b = randint(0, 100000) / 100
+    a = randint(0, 10000) / 100
+    b = randint(0, 10000) / 100
 
-    assert pow.execute(a, b) == a**b
+    assert pow.execute(a, b) == b**a
+
+
+def test_integer_div():
+    div = IntegerDivide()
+    a = randint(0, 100000)
+    b = randint(0, 100000)
+
+    assert div.execute(a, b) == b // a
+
+
+def test_modulo():
+    mod = Modulo()
+    a = randint(0, 100000)
+    b = randint(0, 100000)
+
+    assert mod.execute(a, b) == b % a
