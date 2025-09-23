@@ -5,6 +5,7 @@ from domain.operator import (
     Add,
     Divide,
     Multiply,
+    Pow,
     Subtract,
 )
 from domain.token import Operator
@@ -18,6 +19,7 @@ class OperatorRepository:
         '-': Subtract(),
         '*': Multiply(),
         '/': Divide(),
+        '^': Pow(),
     }
 
     def get_operator(self, symbol: str) -> Operator:

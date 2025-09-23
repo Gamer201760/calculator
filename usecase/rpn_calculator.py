@@ -9,7 +9,9 @@ class RPNCalculatorUseCase:
     """Use case для вычисления RPN выражений"""
 
     def __init__(
-        self, token_parser: TokenizerInterface, converter: RPNConverterInterface
+        self,
+        token_parser: TokenizerInterface,
+        converter: RPNConverterInterface,
     ):
         self._token_parser = token_parser
         self._converter = converter

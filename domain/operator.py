@@ -29,3 +29,10 @@ class Divide(Operator):
         if a == 0:
             raise ValueError('Division by zero')
         return b / a
+
+
+class Pow(Operator):
+    _symbol = '^'
+
+    def execute(self, a: float, b: float) -> float:
+        return b**a
