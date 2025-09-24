@@ -3,7 +3,6 @@ from random import randint
 import pytest
 
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
-from domain.token import Operator
 
 
 def test_symbol_add():
@@ -104,12 +103,3 @@ def test_modulo():
     b = randint(0, 100000)
 
     assert mod.execute(a, b) == b % a
-
-
-def test_op():
-    class Op(Operator):
-        def execute(self, a: float, b: float) -> float:
-            return a + b
-
-    op = Op()
-    print(op.symbol)

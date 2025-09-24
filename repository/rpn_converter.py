@@ -1,34 +1,10 @@
-from typing import Dict, List
+from typing import List
 
-from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import LParen, Number, Operator, RParen, Token
 
 
 class ShuntingYard:
     """Алгоритм сортировочной станции для преобразования инфиксной записи в обратную польскую последовательность"""
-
-    def __init__(self) -> None:
-        # Приоритет операторов (чем больше число, тем выше приоритет)
-        self.precedence: Dict[Operator, int] = {
-            Add(): 1,
-            Subtract(): 1,
-            Multiply(): 2,
-            Divide(): 2,
-            Modulo(): 2,
-            IntegerDivide(): 2,
-            Pow(): 3,
-        }
-
-        # Ассоциативность операторов (True - левая, False - правая)
-        self.left_associative: Dict[Operator, bool] = {
-            Add(): True,
-            Subtract(): True,
-            Multiply(): True,
-            Divide(): True,
-            Modulo(): True,
-            IntegerDivide(): True,
-            Pow(): False,
-        }
 
     def convert(self, tokens: List) -> List[Token]:
         """
@@ -89,15 +65,15 @@ class ShuntingYard:
         """
         Определяет, нужно ли вытолкнуть оператор из стека
         """
-        current_prec = self.precedence.get(current_op, 0)
-        stack_prec = self.precedence.get(stack_op, 0)
-
         # Если приоритет оператора в стеке больше
-        if stack_prec > current_prec:
+        if stack_op.precedence > current_op.precedence:
             return True
 
         # Если приоритеты равны и текущий оператор левоассоциативен
-        if stack_prec == current_prec and self.left_associative.get(current_op, True):
+        if (
+            stack_op.precedence == current_op.precedence
+            and current_op.left_associativity
+        ):
             return True
 
         return False
