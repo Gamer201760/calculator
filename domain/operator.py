@@ -3,6 +3,8 @@ from domain.token import Operator
 
 class Add(Operator):
     _symbol = '+'
+    _precedence = 1
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         return a + b
@@ -10,6 +12,8 @@ class Add(Operator):
 
 class Subtract(Operator):
     _symbol = '-'
+    _precedence = 1
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         return b - a
@@ -17,6 +21,8 @@ class Subtract(Operator):
 
 class Multiply(Operator):
     _symbol = '*'
+    _precedence = 2
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         return a * b
@@ -24,6 +30,8 @@ class Multiply(Operator):
 
 class Divide(Operator):
     _symbol = '/'
+    _precedence = 2
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:
@@ -33,6 +41,8 @@ class Divide(Operator):
 
 class Pow(Operator):
     _symbol = '^'
+    _precedence = 3
+    _left_associativity = False
 
     def execute(self, a: float, b: float) -> float:
         return b**a
@@ -40,6 +50,8 @@ class Pow(Operator):
 
 class IntegerDivide(Operator):
     _symbol = '//'
+    _precedence = 2
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:
@@ -54,6 +66,8 @@ class IntegerDivide(Operator):
 
 class Modulo(Operator):
     _symbol = '%'
+    _precedence = 2
+    _left_associativity = True
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:

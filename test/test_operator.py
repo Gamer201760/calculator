@@ -3,41 +3,42 @@ from random import randint
 import pytest
 
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
+from domain.token import Operator
 
 
 def test_symbol_add():
     add = Add()
-    assert add.get_symbol() == '+'
+    assert add.symbol == '+'
 
 
 def test_symbol_sub():
     sub = Subtract()
-    assert sub.get_symbol() == '-'
+    assert sub.symbol == '-'
 
 
 def test_symbol_div():
     div = Divide()
-    assert div.get_symbol() == '/'
+    assert div.symbol == '/'
 
 
 def test_symbol_mul():
     mul = Multiply()
-    assert mul.get_symbol() == '*'
+    assert mul.symbol == '*'
 
 
 def test_symbol_pow():
     pow = Pow()
-    assert pow.get_symbol() == '^'
+    assert pow.symbol == '^'
 
 
 def test_symbol_integer_div():
     div = IntegerDivide()
-    assert div.get_symbol() == '//'
+    assert div.symbol == '//'
 
 
 def test_symbol_modulo():
     mod = Modulo()
-    assert mod.get_symbol() == '%'
+    assert mod.symbol == '%'
 
 
 def test_add():
@@ -103,3 +104,12 @@ def test_modulo():
     b = randint(0, 100000)
 
     assert mod.execute(a, b) == b % a
+
+
+def test_op():
+    class Op(Operator):
+        def execute(self, a: float, b: float) -> float:
+            return a + b
+
+    op = Op()
+    print(op.symbol)

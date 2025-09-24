@@ -35,7 +35,7 @@ class RPNCalculatorUseCase:
             elif isinstance(token, Operator):
                 if len(stack) < 2:
                     raise InsufficientOperandsError(
-                        f'Insufficient operands for operator {token.get_symbol()}'
+                        f'Insufficient operands for operator {token.symbol}'
                     )
 
                 result = token.execute(stack.pop(), stack.pop())
