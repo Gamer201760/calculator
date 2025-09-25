@@ -9,7 +9,6 @@ class RegexTokenizer:
     """Токенизатор на регулярных выражениях"""
 
     def __init__(self) -> None:
-        # Фиксированные операторы
         self._operators: Dict[str, Type[Operator]] = {
             '+': Add,
             '-': Subtract,
@@ -19,7 +18,6 @@ class RegexTokenizer:
             '//': IntegerDivide,
             '%': Modulo,
         }
-        # Статичный паттерн
         self._pattern = re.compile(
             r'(?P<NUMBER>\d+\.?\d*)|'  # Числа
             # r'(?P<FUNCTION>sqrt|sin|cos|tan|log|abs|max|min)|'  # Функции

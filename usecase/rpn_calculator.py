@@ -1,8 +1,12 @@
-from typing import List
+from typing import List, Optional
 
 from domain.exception import InsufficientOperandsError, InvalidExpressionError
 from domain.token import Number, Operator, Token
-from usecase.interface import RPNConverterInterface, TokenizerInterface
+from usecase.interface import (
+    RPNConverterInterface,
+    TokenizerInterface,
+    ValidatorInterface,
+)
 
 
 class RPNCalculatorUseCase:
@@ -12,9 +16,11 @@ class RPNCalculatorUseCase:
         self,
         token_parser: TokenizerInterface,
         converter: RPNConverterInterface,
+        validators: Optional[List[ValidatorInterface]] = None,
     ):
         self._token_parser = token_parser
         self._converter = converter
+        self._validators = validators
 
     def calculate(self, expression: str) -> float:
         """Вычисляет RPN выражение"""
@@ -22,6 +28,9 @@ class RPNCalculatorUseCase:
             raise InvalidExpressionError('Empty expression')
 
         tokens = self._token_parser.parse(expression)
+        if self._validators:
+            for validator in self._validators:
+                validator.validate(tokens)
         tokens = self._converter.convert(tokens)
         return self._evaluate_tokens(tokens)
 
