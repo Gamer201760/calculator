@@ -24,9 +24,6 @@ class RPNCalculatorUseCase:
 
     def calculate(self, expression: str) -> float:
         """Вычисляет RPN выражение"""
-        if not expression.strip():
-            raise InvalidExpressionError('Empty expression')
-
         tokens = self._token_parser.parse(expression)
         if self._validators:
             for validator in self._validators:
@@ -44,7 +41,7 @@ class RPNCalculatorUseCase:
             elif isinstance(token, Operator):
                 if len(stack) < 2:
                     raise InsufficientOperandsError(
-                        f'Insufficient operands for operator {token.symbol}'
+                        f"Insufficient operands for operator '{token.symbol}'"
                     )
 
                 result = token.execute(stack.pop(), stack.pop())
