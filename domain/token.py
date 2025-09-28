@@ -63,3 +63,34 @@ class Operator(Token, ABC):
                     f"Attribute '{name}' in '{cls.__name__}' must be '{expected_type.__name__}', \
                     got '{type(value).__name__}'"
                 )
+
+
+class UnaryOperator(Token, ABC):
+    """Интерфейс токена для унарных операторов"""
+
+    _symbol: str
+
+    @abstractmethod
+    def execute(self, a: float) -> float: ...
+
+    @property
+    def symbol(self) -> str:
+        return self._symbol
+
+    def __hash__(self) -> int:
+        return hash(self._symbol)
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        required = {
+            '_symbol': str,
+        }
+        for name, expected_type in required.items():
+            if not hasattr(cls, name):
+                raise TypeError(f"Class '{cls.__name__}' must define '{name}'")
+            value = getattr(cls, name)
+            if not isinstance(value, expected_type):
+                raise TypeError(
+                    f"Attribute '{name}' in '{cls.__name__}' must be '{expected_type.__name__}', \
+                    got '{type(value).__name__}'"
+                )
