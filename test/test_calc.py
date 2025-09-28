@@ -1,7 +1,7 @@
 import pytest
 
 from repository.re_parser import RegexTokenizer
-from repository.rpn_converter import ShuntingYard
+from repository.shunting_yard import ShuntingYard
 from repository.validator import BalancedParenValidator
 from usecase.rpn_calculator import RPNCalculatorUseCase
 

@@ -2,7 +2,7 @@ from logging import getLogger
 
 from domain.operator import Add, Multiply
 from domain.token import LParen, Number, RParen
-from repository.rpn_converter import ShuntingYard
+from repository.shunting_yard import ShuntingYard
 
 logger = getLogger(__name__)
 
