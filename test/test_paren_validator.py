@@ -1,6 +1,6 @@
 import pytest
 
-from domain.exception import InvalidExpressionError
+from domain.error import InvalidExpressionError
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import LParen, Number, RParen
 from repository.validator import BalancedParenValidator, OperatorPlacementValidator

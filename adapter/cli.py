@@ -1,4 +1,4 @@
-from domain.exception import DomainError
+from domain.error import DomainError
 from usecase.rpn_calculator import RPNCalculatorUsecase
 
 
@@ -32,4 +32,4 @@ class CliAdapter:
             except Exception as e:
                 print(f'Произошла непредвиденная системная ошибка: {e}')
 
-        print('Завершение работы')
+        print('\nЗавершение работы')

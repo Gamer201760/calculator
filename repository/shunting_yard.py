@@ -1,6 +1,6 @@
 from typing import List
 
-from domain.exception import InvalidExpressionError
+from domain.error import InvalidExpressionError
 from domain.token import LParen, Number, Operator, RParen, Token
 
 

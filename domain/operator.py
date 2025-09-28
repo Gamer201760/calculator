@@ -1,3 +1,4 @@
+from domain.error import CalculationError
 from domain.token import Operator
 
 
@@ -35,7 +36,7 @@ class Divide(Operator):
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:
-            raise ValueError('Division by zero')
+            raise CalculationError('Деление на ноль')
         return b / a
 
 
@@ -55,11 +56,12 @@ class IntegerDivide(Operator):
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:
-            raise ValueError('Division by zero')
+            raise CalculationError('Деление на ноль')
 
-        # Проверяем, что оба числа целые
         if not (a.is_integer() and b.is_integer()):
-            raise TypeError('Integer division requires integer operands')
+            raise CalculationError(
+                'Для целочисленного деления требуются целые операнды'
+            )
 
         return float(int(b) // int(a))
 
@@ -71,10 +73,11 @@ class Modulo(Operator):
 
     def execute(self, a: float, b: float) -> float:
         if a == 0:
-            raise ValueError('Modulo by zero')
+            raise CalculationError('Деление на ноль')
 
-        # Проверяем, что оба числа целые
         if not (a.is_integer() and b.is_integer()):
-            raise TypeError('Modulo operation requires integer operands')
+            raise CalculationError(
+                'Для операции взятия остатка требуются целые операнды'
+            )
 
         return float(int(b) % int(a))

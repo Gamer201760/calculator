@@ -1,6 +1,6 @@
 import pytest
 
-from domain.exception import (
+from domain.error import (
     DomainError,
     InsufficientOperandsError,
     InvalidExpressionError,
