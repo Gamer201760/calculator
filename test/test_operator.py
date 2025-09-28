@@ -2,6 +2,7 @@ from random import randint
 
 import pytest
 
+from domain.error import CalculationError
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 
 
@@ -69,7 +70,7 @@ def test_div_zero():
     a = 0
     b = randint(1, 100000) / 100
 
-    with pytest.raises(ValueError):
+    with pytest.raises(CalculationError):
         div.execute(a, b)
 
 
