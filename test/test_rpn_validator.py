@@ -8,12 +8,12 @@ from domain.exception import (
 from domain.operator import Add, Multiply, Subtract
 from domain.token import LParen, Number, RParen
 from domain.unary import UnaryMinus
-from repository.validator import ParenthesesValidator
+from repository.validator import ParenthesesValidator, RPNValidator
 
 
 @pytest.fixture
 def validator() -> ParenthesesValidator:
-    return ParenthesesValidator()
+    return ParenthesesValidator(RPNValidator())
 
 
 @pytest.mark.parametrize(
@@ -84,6 +84,7 @@ def test_unbalanced_extra_opening_paren_throws_error(validator):
 @pytest.mark.parametrize(
     'tokens',
     [
+        ([Number(5), Number(3), Add(), Add(), Add()]),
         ([LParen(), Number(5), Add(), RParen()]),
         ([LParen(), Add(), RParen()]),
         ([LParen(), Number(1), LParen(), Subtract(), RParen(), RParen()]),
@@ -95,9 +96,15 @@ def test_insufficient_operands_for_binary_op(validator, tokens):
         validator.validate(tokens)
 
 
-def test_insufficient_operands_for_unary_op(validator):
+@pytest.mark.parametrize(
+    'tokens',
+    [
+        (LParen(), UnaryMinus(), RParen()),
+        (UnaryMinus(),),
+    ],
+)
+def test_insufficient_operands_for_unary_op(validator, tokens):
     """не хватает операндов для унарных операторов"""
-    tokens = [LParen(), UnaryMinus(), RParen()]
     with pytest.raises(InsufficientOperandsError):
         validator.validate(tokens)
 
