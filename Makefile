@@ -10,6 +10,6 @@ typecheck:
 	mypy .
 
 run:
-	uv run python -m myapp
+	uv run main.py 
 
 pre-commit: lint typecheck test

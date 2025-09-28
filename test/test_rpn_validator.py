@@ -53,7 +53,7 @@ def validator() -> ParenthesesValidator:
     ],
 )
 def test_valid_expressions(validator, tokens):
-    """Тестирует, что корректно составленные выражения не вызывают ошибок"""
+    """корректно составленные выражения не вызывают ошибок"""
     try:
         validator.validate(tokens)
     except DomainError as e:
@@ -61,21 +61,21 @@ def test_valid_expressions(validator, tokens):
 
 
 def test_empty_parentheses_throws_error(validator):
-    """Тестирует, что пустое выражение () вызывает InvalidExpressionError"""
+    """пустое выражение () вызывает InvalidExpressionError"""
     tokens = [LParen(), RParen()]
     with pytest.raises(InvalidExpressionError):
         validator.validate(tokens)
 
 
 def test_unbalanced_extra_closing_paren_throws_error(validator):
-    """Тестирует, что выражение с лишней закрывающей скобкой вызывает InvalidExpressionError"""
+    """выражение с лишней закрывающей скобкой вызывает InvalidExpressionError"""
     tokens = [Number(5), Number(3), Add(), RParen()]
     with pytest.raises(InvalidExpressionError):
         validator.validate(tokens)
 
 
 def test_unbalanced_extra_opening_paren_throws_error(validator):
-    """Тестирует, что выражение с лишней открывающей скобкой вызывает InvalidExpressionError"""
+    """выражение с лишней открывающей скобкой вызывает InvalidExpressionError"""
     tokens = [LParen(), Number(5), Number(3), Add()]
     with pytest.raises(InvalidExpressionError):
         validator.validate(tokens)
@@ -90,20 +90,20 @@ def test_unbalanced_extra_opening_paren_throws_error(validator):
     ],
 )
 def test_insufficient_operands_for_binary_op(validator, tokens):
-    """Тестирует выражения, в которых не хватает операндов для бинарных операторов"""
+    """не хватает операндов для бинарных операторов"""
     with pytest.raises(InsufficientOperandsError):
         validator.validate(tokens)
 
 
 def test_insufficient_operands_for_unary_op(validator):
-    """Тестирует выражения, в которых не хватает операндов для унарных операторов"""
+    """не хватает операндов для унарных операторов"""
     tokens = [LParen(), UnaryMinus(), RParen()]
     with pytest.raises(InsufficientOperandsError):
         validator.validate(tokens)
 
 
 def test_sub_expression_not_resolving_to_one_value(validator):
-    """Тестирует, что (5 3) вызывает ошибку, т.к. в стеке остается два числа"""
+    """(5 3) вызывает ошибку, т.к. в стеке остается два числа"""
     tokens = [LParen(), Number(5), Number(3), RParen()]
     with pytest.raises(InvalidExpressionError):
         validator.validate(tokens)

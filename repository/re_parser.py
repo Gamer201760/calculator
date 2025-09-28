@@ -1,6 +1,7 @@
 import re
 from typing import Dict, List, Type
 
+from domain.exception import InvalidTokenError
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import LParen, Number, Operator, RParen, Token
 
@@ -51,6 +52,6 @@ class RegexTokenizer:
                 # Игнорируем пробелы
                 continue
             elif kind == 'UNKNOWN':
-                raise ValueError(f'Unknown token: {value}')
+                raise InvalidTokenError(f'Неизвестный токен: "{value}"')
 
         return tokens

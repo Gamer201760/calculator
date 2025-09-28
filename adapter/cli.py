@@ -1,10 +1,11 @@
 from domain.exception import DomainError
-from repository.rpn_converter import RPNConverter, ShuntingYard
-from repository.token_parser import SpaceTokenizer
+from repository.re_parser import RegexTokenizer
+from repository.rpn_converter import ShuntingYard
+from repository.validator import BalancedParenValidator
 from usecase.rpn_calculator import RPNCalculatorUseCase
 
 
-class SpaceCalculator:
+class CalculatorCLI:
     calculator: RPNCalculatorUseCase
 
     def run(self):
@@ -32,23 +33,21 @@ class SpaceCalculator:
                 print(f'Unexpected error: {e}')
 
 
-class SpaceRPNCalculator(SpaceCalculator):
-    """CLI адаптер для обратной польской записи"""
+class InfixCalculator(CalculatorCLI):
+    def __init__(self) -> None:
+        self.calculator = RPNCalculatorUseCase(
+            parser=RegexTokenizer(),
+            converter=ShuntingYard(),
+            validators=[BalancedParenValidator()],
+        )
+        print('Вводите выражения в инфиксной записи (3 + 2) * 5 = 25')
 
-    def __init__(self):
-        token_parser = SpaceTokenizer()
-        converter = RPNConverter()
-        self.calculator = RPNCalculatorUseCase(token_parser, converter)
-        print('RPN Calculator')
-        print("Enter RPN expressions (e.g., '3 4 + 2 *') or 'quit' to exit:")
 
-
-class SpaceInfixCalculator(SpaceCalculator):
-    """CLI адаптер для инфиксной записи"""
-
-    def __init__(self):
-        token_parser = SpaceTokenizer()
-        converter = ShuntingYard()
-        self.calculator = RPNCalculatorUseCase(token_parser, converter)
-        print('Infix Calculator')
-        print("Enter expressions (e.g., '(3 + 2) * 4') or 'quit' to exit:")
+class RPNCalculator(CalculatorCLI):
+    def __init__(self) -> None:
+        self.calculator = RPNCalculatorUseCase(
+            parser=RegexTokenizer(),
+            converter=ShuntingYard(),
+            validators=[BalancedParenValidator()],
+        )
+        print('Вводите выражения в обратной польской нотации (3 2 +) 5 *')

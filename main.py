@@ -1,6 +1,6 @@
 import argparse
 
-from adapter.cli import SpaceInfixCalculator, SpaceRPNCalculator
+from adapter.cli import InfixCalculator, RPNCalculator
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
     )
     parser.add_argument('--rpn', action='store_true')
     args = parser.parse_args()
-    cli = SpaceRPNCalculator() if args.rpn else SpaceInfixCalculator()
+    cli = RPNCalculator() if args.rpn else InfixCalculator()
     cli.run()
 
 

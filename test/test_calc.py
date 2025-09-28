@@ -1,8 +1,18 @@
 import pytest
 
+from repository.re_parser import RegexTokenizer
 from repository.rpn_converter import ShuntingYard
-from repository.token_parser import SpaceTokenizer
+from repository.validator import BalancedParenValidator
 from usecase.rpn_calculator import RPNCalculatorUseCase
+
+
+@pytest.fixture
+def calc() -> RPNCalculatorUseCase:
+    return RPNCalculatorUseCase(
+        parser=RegexTokenizer(),
+        converter=ShuntingYard(),
+        validators=[BalancedParenValidator()],
+    )
 
 
 @pytest.mark.parametrize(
@@ -53,8 +63,5 @@ from usecase.rpn_calculator import RPNCalculatorUseCase
         ('50 + 50 + 50 + 50 + 50 + 50 + 50 + 50 + 50 + 50', 500),
     ],
 )
-def test_calc(expr, expected):
-    parser = SpaceTokenizer()
-    converter = ShuntingYard()
-    calc = RPNCalculatorUseCase(parser, converter)
+def test_calc(calc, expr, expected):
     assert calc.calculate(expr) == expected
