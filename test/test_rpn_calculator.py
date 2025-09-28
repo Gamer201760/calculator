@@ -1,14 +1,14 @@
 import pytest
 
+from domain.calculator import RPNCalculator
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import Number
 from domain.unary import UnaryMinus, UnaryPlus
-from repository.rpn_calculator import RPNCalculatorRepository
 
 
 @pytest.fixture
-def calc() -> RPNCalculatorRepository:
-    return RPNCalculatorRepository()
+def calc() -> RPNCalculator:
+    return RPNCalculator()
 
 
 @pytest.mark.parametrize(

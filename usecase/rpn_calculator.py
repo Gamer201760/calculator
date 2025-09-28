@@ -1,33 +1,29 @@
 from typing import List, Optional
 
-from usecase.interface import (
-    RPNCalculatorInterface,
-    RPNConverterInterface,
-    TokenizerInterface,
-    ValidatorInterface,
-)
+from domain.calculator import RPNCalculator
+from domain.token import LParen, RParen, Token
+from usecase.interface import TokenizerInterface, ValidatorInterface
 
 
-class RPNCalculatorUseCase:
-    """Use case для вычисления RPN выражений"""
-
+class RPNCalculatorUsecase:
     def __init__(
         self,
-        parser: TokenizerInterface,
-        converter: RPNConverterInterface,
-        calc: RPNCalculatorInterface,
+        tokenizer: TokenizerInterface,
+        calculator: RPNCalculator,
         validators: Optional[List[ValidatorInterface]] = None,
     ):
-        self._parser = parser
-        self._converter = converter
-        self._calc = calc
+        self._tokenizer = tokenizer
         self._validators = validators
+        self._calculator = calculator
 
-    def calculate(self, expression: str) -> float:
-        """Вычисляет RPN выражение"""
-        tokens = self._parser.parse(expression)
+    def _remove_paren(self, tokens: List[Token]) -> List[Token]:
+        return [token for token in tokens if not isinstance(token, (LParen, RParen))]
+
+    def exec(self, expr: str) -> float:
+        tokens = self._tokenizer.parse(expr)
+
         if self._validators:
             for validator in self._validators:
                 validator.validate(tokens)
-        tokens = self._converter.convert(tokens)
-        return self._calc.calculate(tokens)
+
+        return self._calculator.calculate(self._remove_paren(tokens))

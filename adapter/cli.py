@@ -1,56 +1,35 @@
 from domain.exception import DomainError
-from repository.re_parser import RegexTokenizer
-from repository.rpn_calculator import RPNCalculatorRepository
-from repository.shunting_yard import ShuntingYard
-from repository.validator import BalancedParenValidator
-from usecase.rpn_calculator import RPNCalculatorUseCase
+from usecase.rpn_calculator import RPNCalculatorUsecase
 
 
-class CalculatorCLI:
-    calculator: RPNCalculatorUseCase
+class CliAdapter:
+    """
+    CLI Адаптер для RPN калькулятора
+    """
+
+    def __init__(self, calculator: RPNCalculatorUsecase):
+        self._calculator = calculator
 
     def run(self):
-        """Запускает интерактивный режим"""
+        """Запускает основной цикл приложения."""
+        print('Добро пожаловать в RPN Калькулятор')
+        print("Введите выражение или 'exit' для выхода")
+        print('Пример: 10 ( 5 3 - ) * 2 /')
+
         while True:
             try:
-                expression = input('> ').strip()
-
-                if expression.lower() in {'quit', 'exit', 'q'}:
-                    print('Goodbye!')
+                line = input('>>> ')
+                if line.lower() in ['exit', 'quit', 'q']:
                     break
 
-                if not expression:
-                    continue
-
-                result = self.calculator.calculate(expression)
-                print(f'Result: {result}')
+                result = self._calculator.exec(line)
+                print(f'Результат: {result}')
 
             except DomainError as e:
-                print(f'Error: {e}')
+                print(f'Ошибка в выражении: {e}')
             except KeyboardInterrupt:
-                print('\nGoodbye!')
                 break
             except Exception as e:
-                print(f'Unexpected error: {e}')
+                print(f'Произошла непредвиденная системная ошибка: {e}')
 
-
-class InfixCalculator(CalculatorCLI):
-    def __init__(self) -> None:
-        self.calculator = RPNCalculatorUseCase(
-            parser=RegexTokenizer(),
-            converter=ShuntingYard(),
-            calc=RPNCalculatorRepository(),
-            validators=[BalancedParenValidator()],
-        )
-        print('Вводите выражения в инфиксной записи (3 + 2) * 5 = 25')
-
-
-class RPNCalculator(CalculatorCLI):
-    def __init__(self) -> None:
-        self.calculator = RPNCalculatorUseCase(
-            parser=RegexTokenizer(),
-            converter=ShuntingYard(),
-            calc=RPNCalculatorRepository(),
-            validators=[BalancedParenValidator()],
-        )
-        print('Вводите выражения в обратной польской нотации (3 2 +) 5 *')
+        print('Завершение работы')

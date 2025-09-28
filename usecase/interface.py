@@ -23,9 +23,3 @@ class ValidatorInterface(Protocol):
     def validate(self, tokens: List[Token]) -> None:
         """Валидирует список токенов, выбрасывает исключение при ошибке"""
         ...
-
-
-class RPNCalculatorInterface(Protocol):
-    """Интерфейс вычислителя обратной польской последовательности"""
-
-    def calculate(self, tokens: List[Token]) -> float: ...
