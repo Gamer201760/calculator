@@ -1,5 +1,6 @@
 from domain.exception import DomainError
 from repository.re_parser import RegexTokenizer
+from repository.rpn_calculator import RPNCalculatorRepository
 from repository.shunting_yard import ShuntingYard
 from repository.validator import BalancedParenValidator
 from usecase.rpn_calculator import RPNCalculatorUseCase
@@ -38,6 +39,7 @@ class InfixCalculator(CalculatorCLI):
         self.calculator = RPNCalculatorUseCase(
             parser=RegexTokenizer(),
             converter=ShuntingYard(),
+            calc=RPNCalculatorRepository(),
             validators=[BalancedParenValidator()],
         )
         print('Вводите выражения в инфиксной записи (3 + 2) * 5 = 25')
@@ -48,6 +50,7 @@ class RPNCalculator(CalculatorCLI):
         self.calculator = RPNCalculatorUseCase(
             parser=RegexTokenizer(),
             converter=ShuntingYard(),
+            calc=RPNCalculatorRepository(),
             validators=[BalancedParenValidator()],
         )
         print('Вводите выражения в обратной польской нотации (3 2 +) 5 *')

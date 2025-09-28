@@ -1,6 +1,7 @@
 import pytest
 
 from repository.re_parser import RegexTokenizer
+from repository.rpn_calculator import RPNCalculatorRepository
 from repository.shunting_yard import ShuntingYard
 from repository.validator import BalancedParenValidator
 from usecase.rpn_calculator import RPNCalculatorUseCase
@@ -11,6 +12,7 @@ def calc() -> RPNCalculatorUseCase:
     return RPNCalculatorUseCase(
         parser=RegexTokenizer(),
         converter=ShuntingYard(),
+        calc=RPNCalculatorRepository(),
         validators=[BalancedParenValidator()],
     )
 

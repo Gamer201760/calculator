@@ -1,8 +1,7 @@
 from typing import List, Optional
 
-from domain.exception import InsufficientOperandsError, InvalidExpressionError
-from domain.token import Number, Operator, Token, UnaryOperator
 from usecase.interface import (
+    RPNCalculatorInterface,
     RPNConverterInterface,
     TokenizerInterface,
     ValidatorInterface,
@@ -16,10 +15,12 @@ class RPNCalculatorUseCase:
         self,
         parser: TokenizerInterface,
         converter: RPNConverterInterface,
+        calc: RPNCalculatorInterface,
         validators: Optional[List[ValidatorInterface]] = None,
     ):
         self._parser = parser
         self._converter = converter
+        self._calc = calc
         self._validators = validators
 
     def calculate(self, expression: str) -> float:
@@ -29,34 +30,4 @@ class RPNCalculatorUseCase:
             for validator in self._validators:
                 validator.validate(tokens)
         tokens = self._converter.convert(tokens)
-        return self._evaluate_tokens(tokens)
-
-    def _evaluate_tokens(self, tokens: List[Token]) -> float:
-        """Вычисляет список токенов используя стек"""
-        stack: List[float] = []
-
-        for token in tokens:
-            if isinstance(token, Number):
-                stack.append(token.value)
-            elif isinstance(token, Operator):
-                if len(stack) < 2:
-                    raise InsufficientOperandsError(
-                        f"Insufficient operands for operator '{token.symbol}'"
-                    )
-
-                result = token.execute(stack.pop(), stack.pop())
-                stack.append(result)
-            elif isinstance(token, UnaryOperator):
-                if not stack:
-                    raise InsufficientOperandsError(
-                        f"Insufficient operand for unary operator '{token.symbol}'"
-                    )
-                result = token.execute(stack.pop())
-                stack.append(result)
-
-        if len(stack) != 1:
-            raise InvalidExpressionError(
-                'Invalid RPN expression: incorrect number of operands'
-            )
-
-        return stack[0]
+        return self._calc.calculate(tokens)
