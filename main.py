@@ -18,7 +18,7 @@ def main():
         calculator=RPNCalculatorUsecase(
             tokenizer=RegexTokenizer(),
             calculator=RPNCalculator(),
-            validators=[ParenthesesValidator(RPNValidator())],
+            validator=ParenthesesValidator(RPNValidator()),
         ),
     )
     cli.run()
