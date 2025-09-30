@@ -48,6 +48,7 @@ class Operator(Token, ABC):
         return hash(self._symbol)
 
     def __init_subclass__(cls, **kwargs):
+        """Проверяет подклассы на наличе атрибутов и их типы"""
         super().__init_subclass__(**kwargs)
         required = {
             '_symbol': str,
@@ -55,10 +56,10 @@ class Operator(Token, ABC):
             '_left_associativity': bool,
         }
         for name, expected_type in required.items():
-            if not hasattr(cls, name):
+            if not hasattr(cls, name):  # Проверям наличие атрибута у подкласса
                 raise TypeError(f"Class '{cls.__name__}' must define '{name}'")
-            value = getattr(cls, name)
-            if not isinstance(value, expected_type):
+            value = getattr(cls, name)  # Получаем атрибут
+            if not isinstance(value, expected_type):  # Проверяем тип атрибута
                 raise TypeError(
                     f"Attribute '{name}' in '{cls.__name__}' must be '{expected_type.__name__}', \
                     got '{type(value).__name__}'"
@@ -81,15 +82,16 @@ class UnaryOperator(Token, ABC):
         return hash(self._symbol)
 
     def __init_subclass__(cls, **kwargs):
+        """Проверяет подклассы на наличе атрибутов и их типы"""
         super().__init_subclass__(**kwargs)
         required = {
             '_symbol': str,
         }
         for name, expected_type in required.items():
-            if not hasattr(cls, name):
+            if not hasattr(cls, name):  # Проверям наличие атрибута у подкласса
                 raise TypeError(f"Class '{cls.__name__}' must define '{name}'")
-            value = getattr(cls, name)
-            if not isinstance(value, expected_type):
+            value = getattr(cls, name)  # Получаем атрибут
+            if not isinstance(value, expected_type):  # Проверяем тип атрибута
                 raise TypeError(
                     f"Attribute '{name}' in '{cls.__name__}' must be '{expected_type.__name__}', \
                     got '{type(value).__name__}'"
