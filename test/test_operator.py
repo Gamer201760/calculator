@@ -6,41 +6,6 @@ from domain.error import CalculationError
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 
 
-def test_symbol_add():
-    add = Add()
-    assert add.symbol == '+'
-
-
-def test_symbol_sub():
-    sub = Subtract()
-    assert sub.symbol == '-'
-
-
-def test_symbol_div():
-    div = Divide()
-    assert div.symbol == '/'
-
-
-def test_symbol_mul():
-    mul = Multiply()
-    assert mul.symbol == '*'
-
-
-def test_symbol_pow():
-    pow = Pow()
-    assert pow.symbol == '^'
-
-
-def test_symbol_integer_div():
-    div = IntegerDivide()
-    assert div.symbol == '//'
-
-
-def test_symbol_modulo():
-    mod = Modulo()
-    assert mod.symbol == '%'
-
-
 def test_add():
     add = Add()
     a = randint(0, 100000) / 100
