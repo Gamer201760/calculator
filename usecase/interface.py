@@ -18,8 +18,20 @@ class RPNConverterInterface(Protocol):
 
 
 class ValidatorInterface(Protocol):
-    """Интерфейс валидатора выражений"""
+    """
+    Интерфейс валидатора выражений,
+    валидирует список токенов,
+    выбрасывает исключение при ошибке
+    """
 
-    def validate(self, tokens: List[Token]) -> None:
-        """Валидирует список токенов, выбрасывает исключение при ошибке"""
-        ...
+    def validate(self, tokens: List[Token]) -> None: ...
+
+
+class ProcessorInterface(Protocol):
+    """
+    Интерфейс процессора для токенов,
+    запускается после токенизатора,
+    для преобразования токенов
+    """
+
+    def process(self, tokens: List[Token]) -> List[Token]: ...

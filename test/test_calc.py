@@ -1,10 +1,15 @@
+import logging
+
 import pytest
 
 from domain.calculator import RPNCalculator
+from repository.infix_unary_processor import InfixUnaryProcessor
 from repository.re_parser import RegexTokenizer
 from repository.shunting_yard import ShuntingYard
 from repository.validator import ParenthesesValidator, RPNValidator
 from usecase.infix_calculator import InfixCalculatorUsecase
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -13,6 +18,7 @@ def calc() -> InfixCalculatorUsecase:
         tokenizer=RegexTokenizer(),
         calculator=RPNCalculator(),
         conveter=ShuntingYard(),
+        processor=InfixUnaryProcessor(),
         validator=ParenthesesValidator(RPNValidator()),
     )
 
@@ -65,4 +71,6 @@ def calc() -> InfixCalculatorUsecase:
     ],
 )
 def test_calc(calc: InfixCalculatorUsecase, expr, expected):
-    assert calc.exec(expr) == expected
+    tokens = calc.exec(expr)
+    logger.debug(tokens)
+    assert tokens == expected

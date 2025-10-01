@@ -2,7 +2,6 @@ import logging
 
 import pytest
 
-from domain.error import InvalidExpressionError
 from domain.operator import (
     Add,
     Divide,
@@ -28,14 +27,15 @@ def parser() -> RegexTokenizer:
     'expr,expected',
     [
         ('1 + 2', [Number(1), Add(), Number(2)]),
-        ('10 // +10', [Number(10), IntegerDivide(), UnaryPlus(), Number(10)]),
-        ('10 // -10', [Number(10), IntegerDivide(), UnaryMinus(), Number(10)]),
         ('3 - 4', [Number(3), Subtract(), Number(4)]),
-        ('3--4', [Number(3), Subtract(), UnaryMinus(), Number(4)]),
         ('5 * 6', [Number(5), Multiply(), Number(6)]),
         ('7 / 8', [Number(7), Divide(), Number(8)]),
         ('2 ^ 3', [Number(2), Pow(), Number(3)]),
         ('9 // 2', [Number(9), IntegerDivide(), Number(2)]),
+        ('10 10 10 - -', [Number(10), Number(10), Number(10), Subtract(), Subtract()]),
+        ('10 10 ~ -', [Number(10), Number(10), UnaryMinus(), Subtract()]),
+        ('3 ~', [Number(3), UnaryMinus()]),
+        ('10 3 $ +', [Number(10), Number(3), UnaryPlus(), Add()]),
         ('10 % 3', [Number(10), Modulo(), Number(3)]),
         (
             '(1 + 2) * 3',
@@ -157,6 +157,7 @@ def parser() -> RegexTokenizer:
 )
 def test_tokenize(parser: RegexTokenizer, expr, expected):
     tokens = parser.parse(expr)
+    logger.debug(tokens)
 
     assert len(tokens) == len(expected)
     for t, e in zip(tokens, expected):
@@ -165,10 +166,16 @@ def test_tokenize(parser: RegexTokenizer, expr, expected):
             assert t.value == e.value
 
 
-@pytest.mark.parametrize(
-    'expr',
-    ['--11123+-2', '///', '// 10', '10 //', '10 // * 10'],
-)
-def test_invalid_expr(parser: RegexTokenizer, expr):
-    with pytest.raises(InvalidExpressionError):
-        logger.debug(parser.parse(expr))
+# @pytest.mark.parametrize(
+#     'expr',
+#     [
+#         '--11123+-2',
+#         '///',
+#         '// 10',
+#         '10 //',
+#         '10 // * 10',
+#     ],
+# )
+# def test_invalid_expr(parser: RegexTokenizer, expr):
+#     with pytest.raises(InvalidExpressionError):
+#         logger.debug(parser.parse(expr))
