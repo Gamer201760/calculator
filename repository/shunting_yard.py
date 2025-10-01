@@ -1,7 +1,15 @@
 from typing import List
 
 from domain.error import InvalidExpressionError
-from domain.token import LParen, Number, Operator, RParen, Token
+from domain.token import (
+    LParen,
+    Number,
+    Operator,
+    OperatorInterface,
+    RParen,
+    Token,
+    UnaryOperator,
+)
 
 
 class ShuntingYard:
@@ -27,11 +35,11 @@ class ShuntingYard:
             if isinstance(token, Number):
                 output_queue.append(token)
 
-            elif isinstance(token, Operator):
+            elif isinstance(token, (Operator, UnaryOperator)):
                 # Обрабатываем операторы согласно приоритету и ассоциативности
                 while (
                     operator_stack
-                    and isinstance(operator_stack[-1], Operator)
+                    and isinstance(operator_stack[-1], (Operator, UnaryOperator))
                     and self._should_pop_operator(token, operator_stack[-1])
                 ):
                     output_queue.append(operator_stack.pop())
@@ -65,7 +73,9 @@ class ShuntingYard:
 
         return output_queue
 
-    def _should_pop_operator(self, current_op: Operator, stack_op: Operator) -> bool:
+    def _should_pop_operator(
+        self, current_op: OperatorInterface, stack_op: OperatorInterface
+    ) -> bool:
         """
         Определяет, нужно ли вытолкнуть оператор из стека
         """

@@ -42,7 +42,7 @@ class Divide(Operator):
 
 class Pow(Operator):
     _symbol = '^'
-    _precedence = 3
+    _precedence = 4
     _left_associativity = False
 
     def execute(self, a: float, b: float) -> float:
