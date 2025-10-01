@@ -1,5 +1,8 @@
+import logging
+
 import pytest
 
+from domain.error import InvalidExpressionError
 from domain.operator import (
     Add,
     Divide,
@@ -10,14 +13,25 @@ from domain.operator import (
     Subtract,
 )
 from domain.token import LParen, Number, RParen
+from domain.unary import UnaryMinus, UnaryPlus
 from repository.re_parser import RegexTokenizer
+
+logger = logging.getLogger(__name__)
+
+
+@pytest.fixture
+def parser() -> RegexTokenizer:
+    return RegexTokenizer()
 
 
 @pytest.mark.parametrize(
     'expr,expected',
     [
         ('1 + 2', [Number(1), Add(), Number(2)]),
+        ('10 // +10', [Number(10), IntegerDivide(), UnaryPlus(), Number(10)]),
+        ('10 // -10', [Number(10), IntegerDivide(), UnaryMinus(), Number(10)]),
         ('3 - 4', [Number(3), Subtract(), Number(4)]),
+        ('3--4', [Number(3), Subtract(), UnaryMinus(), Number(4)]),
         ('5 * 6', [Number(5), Multiply(), Number(6)]),
         ('7 / 8', [Number(7), Divide(), Number(8)]),
         ('2 ^ 3', [Number(2), Pow(), Number(3)]),
@@ -141,12 +155,20 @@ from repository.re_parser import RegexTokenizer
         ),
     ],
 )
-def test_tokenize(expr, expected):
-    tokens = RegexTokenizer().parse(expr)
+def test_tokenize(parser: RegexTokenizer, expr, expected):
+    tokens = parser.parse(expr)
 
-    # Проверяем типы и значения токенов
     assert len(tokens) == len(expected)
     for t, e in zip(tokens, expected):
         assert isinstance(t, type(e))
         if isinstance(t, Number):
             assert t.value == e.value
+
+
+@pytest.mark.parametrize(
+    'expr',
+    ['--11123+-2', '///', '// 10', '10 //', '10 // * 10'],
+)
+def test_invalid_expr(parser: RegexTokenizer, expr):
+    with pytest.raises(InvalidExpressionError):
+        logger.debug(parser.parse(expr))
