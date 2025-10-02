@@ -141,6 +141,16 @@ class ExpressionBoundaryValidator:
             raise InvalidExpressionError(f'Выражение не может заканчиваться на {token}')
 
 
+class EmptyValidator:
+    """
+    Выкидывает по ошибку при пустом списке токенов
+    """
+
+    def validate(self, tokens: List[Token]) -> None:
+        if len(tokens) == 0:
+            raise InvalidExpressionError('Список токенов пуст')
+
+
 class ValidatorFactory:
     """
     Применяет валидаторы по порядку
