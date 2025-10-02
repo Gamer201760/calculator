@@ -26,6 +26,7 @@ class InfixCalculatorUsecase:
 
     def exec(self, expr: str) -> float:
         tokens = self._tokenizer.parse(expr)
+        # TODO: add validator after parse
         tokens = self._processor.process(tokens)
         tokens = self._conveter.convert(tokens)
         if self._validator:

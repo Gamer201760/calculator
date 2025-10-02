@@ -164,18 +164,3 @@ def test_tokenize(parser: RegexTokenizer, expr, expected):
         assert isinstance(t, type(e))
         if isinstance(t, Number):
             assert t.value == e.value
-
-
-# @pytest.mark.parametrize(
-#     'expr',
-#     [
-#         '--11123+-2',
-#         '///',
-#         '// 10',
-#         '10 //',
-#         '10 // * 10',
-#     ],
-# )
-# def test_invalid_expr(parser: RegexTokenizer, expr):
-#     with pytest.raises(InvalidExpressionError):
-#         logger.debug(parser.parse(expr))
