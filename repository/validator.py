@@ -3,7 +3,6 @@ from typing import List
 
 from domain.error import InsufficientOperandsError, InvalidExpressionError
 from domain.token import LParen, Number, Operator, RParen, Token, UnaryOperator
-from usecase.interface import ValidatorInterface
 
 
 class RPNValidator:
@@ -146,16 +145,3 @@ class ExpressionEmptyValidator:
     def validate(self, tokens: List[Token]) -> None:
         if len(tokens) == 0:
             raise InvalidExpressionError('Список токенов пуст')
-
-
-class ValidatorFactory:
-    """
-    Применяет валидаторы по порядку
-    """
-
-    def __init__(self, validators: List[ValidatorInterface]) -> None:
-        self._validators = validators
-
-    def validate(self, tokens: List[Token]) -> None:
-        for validator in self._validators:
-            validator.validate(tokens)

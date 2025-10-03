@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 import pytest
 
@@ -14,14 +15,19 @@ from repository.validator import (
     RPNValidator,
 )
 from usecase.calculator import CalculatorUsecase
-from usecase.pipeline import ConversionStep, ProcessingStep, ValidationStep
+from usecase.pipeline import (
+    ConversionStep,
+    PipelineStepInterface,
+    ProcessingStep,
+    ValidationStep,
+)
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
 def calc() -> CalculatorUsecase:
-    pipeline = [
+    pipeline: List[PipelineStepInterface] = [
         ValidationStep(ExpressionEmptyValidator()),
         ProcessingStep(InfixUnaryProcessor()),
         ValidationStep(ExpressionBoundaryValidator()),
@@ -59,6 +65,15 @@ def calc() -> CalculatorUsecase:
         ('18 % 5 + 1', 4),
         ('0 / 5', 0),
         ('5 / 2', 2.5),
+        ('1 + 2', 3),
+        ('2 + 3 * 4', 14),
+        ('5 / 2', 2.5),
+        ('( 2 + 3 ) * 4', 20),
+        ('-2', -2.0),
+        ('-(-2)', 2.0),
+        ('-2 ^ 2', -4),
+        ('(-2) ^ 2', 4),
+        ('10 * (-5)', -50),
         ('5 // 2', 2),
         ('5 % 2', 1),
         ('2 ^ 0', 1),
@@ -88,65 +103,40 @@ def calc() -> CalculatorUsecase:
 def test_calc(calc: CalculatorUsecase, expr, expected):
     tokens = calc.exec(expr)
     logger.debug(tokens)
-    assert tokens == expected
-
-
-@pytest.mark.parametrize(
-    'expr,expected',
-    [
-        # --- Основные валидные случаи ---
-        ('1 + 2', 3),
-        ('2 + 3 * 4', 14),
-        ('5 / 2', 2.5),
-        ('( 2 + 3 ) * 4', 20),
-        # --- Унарные операторы и приоритеты ---
-        ('-2', -2.0),
-        ('-(-2)', 2.0),
-        ('-2 ^ 2', -4),
-        ('(-2) ^ 2', 4),
-        ('10 * (-5)', -50),
-    ],
-)
-def test_valid_calculations(calc: CalculatorUsecase, expr: str, expected: float):
-    """Тестирует небольшой набор валидных выражений."""
     assert calc.exec(expr) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
     'expr,expected_exception',
     [
-        # === Ошибки Токенизации (неизвестные символы) ===
+        # неизвестные символы
         ('5 @ 2', InvalidTokenError),
         ('1..2 + 3', InvalidTokenError),
         ('abc + 5', InvalidTokenError),
-        # === Ошибки Пре-валидации (до конвертации) ===
-        # --- Пустое/некорректное выражение ---
+        # некорректное выражение
         ('', InvalidExpressionError),
         ('   ', InvalidExpressionError),
-        # --- Некорректные границы выражения ---
+        # некорректные границы выражения
         ('* 5 + 2', InvalidExpressionError),
         ('5 + 2 *', InvalidExpressionError),
         ('5 +', InvalidExpressionError),
-        # --- Некорректная последовательность операторов ---
+        # некорректная последовательность операторов
         ('5 * / 2', InvalidExpressionError),
         (
             '5 + - 2',
             InvalidExpressionError,
-        ),  # Бинарный плюс, затем унарный минус - корректно
-        # Но бинарный плюс и бинарный минус - нет
-        ('5 // +', InvalidExpressionError),  # Унарный плюс без числа после
-        # === Ошибки Конвертации (Shunting Yard) ===
-        # --- Несбалансированные скобки ---
+        ),
+        ('5 // +', InvalidExpressionError),  # унарный оператор без числа после
+        # несбалансированные скобки ---
         ('(5 + 2', InvalidExpressionError),
         ('5 + 2)', InvalidExpressionError),
         ('5 * (', InvalidExpressionError),
         (') 5 + 2 (', InvalidExpressionError),
-        # === Ошибки Пост-валидации (семантика RPN) ===
-        # --- Пустые скобки или лишние операнды ---
+        # пустые скобки или лишние операнды ---
         ('()', InvalidExpressionError),
         ('5 6', InvalidExpressionError),
         ('(5 6)', InvalidExpressionError),
-        # === Ошибки Времени Вычисления (Калькулятор) ===
+        # ошибки вычисления
         ('5 / 0', CalculationError),
         ('10 / (3 - 3)', CalculationError),
         ('1 // 0', CalculationError),

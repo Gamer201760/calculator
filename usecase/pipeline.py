@@ -16,7 +16,7 @@ class PipelineStepInterface(Protocol):
     def process(self, tokens: List[Token]) -> List[Token]: ...
 
 
-class ValidationStep(PipelineStepInterface):
+class ValidationStep:
     """Шаг конвейера для валидатора"""
 
     def __init__(self, validator: ValidatorInterface) -> None:
@@ -27,7 +27,7 @@ class ValidationStep(PipelineStepInterface):
         return tokens
 
 
-class ProcessingStep(PipelineStepInterface):
+class ProcessingStep:
     """Шаг конвейера для обработки токенов"""
 
     def __init__(self, processor: ProcessorInterface) -> None:
@@ -37,7 +37,7 @@ class ProcessingStep(PipelineStepInterface):
         return self._processor.process(tokens)
 
 
-class ConversionStep(PipelineStepInterface):
+class ConversionStep:
     """Шаг конвейера для конвертации токенов"""
 
     def __init__(self, converter: RPNConverterInterface) -> None:

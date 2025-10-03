@@ -1,20 +1,17 @@
 from domain.error import DomainError
-from usecase.rpn_calculator import RPNCalculatorUsecase
+from usecase.calculator import CalculatorUsecase
 
 
-class CliAdapter:
+class CliCalculator:
     """
-    CLI Адаптер для RPN калькулятора
+    CLI Адаптер для калькулятора
     """
 
-    def __init__(self, calculator: RPNCalculatorUsecase):
+    def __init__(self, calculator: CalculatorUsecase):
         self._calculator = calculator
 
     def run(self):
         """Запускает основной цикл приложения"""
-        print('Добро пожаловать в RPN Калькулятор')
-        print("Введите выражение или 'exit' для выхода")
-        print('Пример: 10 ( 5 3 - ) * 2 /')
 
         while True:
             try:
