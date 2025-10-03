@@ -6,9 +6,7 @@ from domain.token import Token
 class TokenizerInterface(Protocol):
     """Интерфейс для парсера токенов"""
 
-    def parse(self, expression: str) -> List[Token]:
-        """Парсит строку в список токенов"""
-        ...
+    def parse(self, expression: str) -> List[Token]: ...
 
 
 class RPNConverterInterface(Protocol):

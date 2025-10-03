@@ -4,13 +4,13 @@ from domain.error import InvalidExpressionError
 from domain.operator import Add, Pow, Subtract
 from domain.token import LParen, Number, RParen
 from domain.unary import UnaryMinus
-from repository.validator import ExpressionBoundaryValidator
+from repository.validator import ExpressionEmptyValidator
 from usecase.interface import ValidatorInterface
 
 
 @pytest.fixture
 def validator() -> ValidatorInterface:
-    return ExpressionBoundaryValidator()
+    return ExpressionEmptyValidator()
 
 
 @pytest.mark.parametrize(
@@ -20,7 +20,6 @@ def validator() -> ValidatorInterface:
         ([LParen(), Number(1), Pow(), Number(2), RParen()]),
         ([Number(1), Subtract(), LParen(), UnaryMinus(), Number(1), RParen()]),
         ([LParen(), RParen()]),
-        ([LParen(), UnaryMinus(), Number(1), RParen()]),
     ],
 )
 def test_valid(validator: ValidatorInterface, expr):
@@ -30,10 +29,7 @@ def test_valid(validator: ValidatorInterface, expr):
 @pytest.mark.parametrize(
     'expr',
     [
-        ([Add(), Number(10)]),
-        ([Number(22), Pow()]),
-        ([Subtract(), LParen(), UnaryMinus(), Number(1), RParen()]),
-        ([UnaryMinus(), Number(1), RParen(), LParen()]),
+        ([]),
     ],
 )
 def test_invalid(validator: ValidatorInterface, expr):

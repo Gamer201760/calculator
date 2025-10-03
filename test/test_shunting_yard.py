@@ -6,12 +6,13 @@ from domain.operator import Add, Pow
 from domain.token import Number
 from domain.unary import UnaryMinus
 from repository.shunting_yard import ShuntingYard
+from usecase.interface import RPNConverterInterface
 
 logger = getLogger(__name__)
 
 
 @pytest.fixture
-def converter() -> ShuntingYard:
+def converter() -> RPNConverterInterface:
     return ShuntingYard()
 
 
@@ -29,7 +30,7 @@ def converter() -> ShuntingYard:
         ),
     ],
 )
-def test_shunting_yard(converter: ShuntingYard, expr, expected):
+def test_shunting_yard(converter: RPNConverterInterface, expr, expected):
     rpn = converter.convert(expr)
     logger.debug(rpn)
     assert len(rpn) == len(expected)

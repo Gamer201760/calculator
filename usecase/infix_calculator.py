@@ -16,20 +16,25 @@ class InfixCalculatorUsecase:
         calculator: RPNCalculator,
         conveter: RPNConverterInterface,
         processor: ProcessorInterface,
-        validator: Optional[ValidatorInterface] = None,
+        pre_validator: Optional[ValidatorInterface] = None,
+        post_validator: Optional[ValidatorInterface] = None,
     ):
         self._tokenizer = tokenizer
-        self._validator = validator
         self._conveter = conveter
         self._processor = processor
         self._calculator = calculator
+        self._pre_validator = pre_validator
+        self._post_validator = post_validator
 
     def exec(self, expr: str) -> float:
         tokens = self._tokenizer.parse(expr)
-        # TODO: add validator after parse
         tokens = self._processor.process(tokens)
+
+        if self._pre_validator:
+            self._pre_validator.validate(tokens)
+
         tokens = self._conveter.convert(tokens)
-        if self._validator:
-            self._validator.validate(tokens)
+        if self._post_validator:
+            self._post_validator.validate(tokens)
 
         return self._calculator.calculate(tokens)

@@ -1,15 +1,16 @@
 import pytest
 
+from domain.token import UnaryOperator
 from domain.unary import UnaryMinus, UnaryPlus
 
 
 @pytest.fixture
-def minus() -> UnaryMinus:
+def minus() -> UnaryOperator:
     return UnaryMinus()
 
 
 @pytest.fixture
-def plus() -> UnaryPlus:
+def plus() -> UnaryOperator:
     return UnaryPlus()
 
 

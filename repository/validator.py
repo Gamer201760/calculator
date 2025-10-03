@@ -141,7 +141,7 @@ class ExpressionBoundaryValidator:
             raise InvalidExpressionError(f'Выражение не может заканчиваться на {token}')
 
 
-class EmptyValidator:
+class ExpressionEmptyValidator:
     """
     Выкидывает по ошибку при пустом списке токенов
     """

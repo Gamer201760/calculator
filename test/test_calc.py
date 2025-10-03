@@ -6,7 +6,14 @@ from domain.calculator import RPNCalculator
 from repository.infix_unary_processor import InfixUnaryProcessor
 from repository.re_parser import RegexTokenizer
 from repository.shunting_yard import ShuntingYard
-from repository.validator import ParenthesesValidator, RPNValidator
+from repository.validator import (
+    ExpressionBoundaryValidator,
+    ExpressionEmptyValidator,
+    OperatorSequenceValidator,
+    ParenthesesValidator,
+    RPNValidator,
+    ValidatorFactory,
+)
 from usecase.infix_calculator import InfixCalculatorUsecase
 
 logger = logging.getLogger(__name__)
@@ -19,13 +26,21 @@ def calc() -> InfixCalculatorUsecase:
         calculator=RPNCalculator(),
         conveter=ShuntingYard(),
         processor=InfixUnaryProcessor(),
-        validator=ParenthesesValidator(RPNValidator()),
+        pre_validator=ValidatorFactory(
+            [
+                ExpressionEmptyValidator(),
+                ExpressionBoundaryValidator(),
+                OperatorSequenceValidator(),
+            ]
+        ),
+        post_validator=ParenthesesValidator(RPNValidator()),
     )
 
 
 @pytest.mark.parametrize(
     'expr,expected',
     [
+        ('-1 + (-2)', -3),
         ('1 + 2', 3),
         ('10 - 7', 3),
         ('4 * 5', 20),
@@ -36,6 +51,7 @@ def calc() -> InfixCalculatorUsecase:
         ('(-2) ^ 2', 4),
         ('-(-1)', 1),
         ('9 // 2', 4),
+        ('9 // 2.0', 4),
         ('9 % 2', 1),
         ('2 + 3 * 4', 14),
         ('( 2 + 3 ) * 4', 20),
@@ -56,7 +72,7 @@ def calc() -> InfixCalculatorUsecase:
         ('( 1 + 2 + 3 + 4 + 5 ) * 2', 30),
         ('2 ^ 3 ^ 2', 512),  # 2^(3^2) = 2^9 = 512
         ('1000 // 3 // 3', 111),
-        ('1000 % 97', 30),
+        ('1000%97', 30),
         ('50 * 2 + 100 / 4 - 30', 95),
         ('( 2 + 3 ) * ( 4 + 5 )', 45),
         ('( ( 2 + 3 ) * ( 4 + 5 ) ) ^ 2', 2025),

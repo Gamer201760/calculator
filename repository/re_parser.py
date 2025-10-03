@@ -31,13 +31,10 @@ class RegexTokenizer:
 
         self._pattern = re.compile(
             r'(?P<NUMBER>\d+\.?\d*)|'  # Числа
-            # r'(?P<FUNCTION>sqrt|sin|cos|tan|log|abs|max|min)|'  # Функции
-            # r'(?P<CONSTANT>tau|pi|e)|'  # Константы (tau первым для правильного распознавания)
-            r'(?P<OPERATOR>//|[+\-*/^%])|'  # Операторы (// первым)
+            r'(?P<OPERATOR>//|[+\-*/^%])|'  # Операторы
             r'(?P<UNARY_OPERATOR>[~$])|'  # Унарные операторы
             r'(?P<LPAREN>\()|'  # Левая скобка
             r'(?P<RPAREN>\))|'  # Правая скобка
-            # r'(?P<COMMA>,)|'  # Запятая
             r'(?P<WHITESPACE>\s+)|'  # Пробелы
             r'(?P<UNKNOWN>.)'  # Неизвестные символы
         )

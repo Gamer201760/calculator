@@ -14,12 +14,13 @@ from domain.operator import (
 from domain.token import LParen, Number, RParen
 from domain.unary import UnaryMinus, UnaryPlus
 from repository.re_parser import RegexTokenizer
+from usecase.interface import TokenizerInterface
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def parser() -> RegexTokenizer:
+def parser() -> TokenizerInterface:
     return RegexTokenizer()
 
 
@@ -155,7 +156,7 @@ def parser() -> RegexTokenizer:
         ),
     ],
 )
-def test_tokenize(parser: RegexTokenizer, expr, expected):
+def test_tokenize(parser: TokenizerInterface, expr, expected):
     tokens = parser.parse(expr)
     logger.debug(tokens)
 

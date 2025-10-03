@@ -24,6 +24,7 @@ class ShuntingYard:
         Входные токены могут быть:
         - Number: числа
         - Operator: операторы (+, -, *, /, ^, //, %)
+        - UnaryOperator: унарные операторы (~, $)
         - LeftParen/RightParen: скобки
 
         Возвращает Number и Operator токены в RPN порядке (скобки исключаются)

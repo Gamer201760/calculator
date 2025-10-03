@@ -6,12 +6,13 @@ from domain.operator import Add, IntegerDivide, Multiply, Subtract
 from domain.token import LParen, Number, RParen
 from domain.unary import UnaryMinus, UnaryPlus
 from repository.infix_unary_processor import InfixUnaryProcessor
+from usecase.interface import ProcessorInterface
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def processor() -> InfixUnaryProcessor:
+def processor() -> ProcessorInterface:
     return InfixUnaryProcessor()
 
 
@@ -36,7 +37,7 @@ def processor() -> InfixUnaryProcessor:
         ),
     ],
 )
-def test_unary(processor: InfixUnaryProcessor, expr, expected):
+def test_unary(processor: ProcessorInterface, expr, expected):
     tokens = processor.process(expr)
     logger.debug(tokens)
     assert len(tokens) == len(expected)
