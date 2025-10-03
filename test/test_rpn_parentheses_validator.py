@@ -81,10 +81,10 @@ def test_unbalanced_extra_opening_paren_throws_error(validator: ValidatorInterfa
 @pytest.mark.parametrize(
     'tokens',
     [
-        ([Number(5), Number(3), Add(), Add(), Add()]),
-        ([LParen(), Number(5), Add(), RParen()]),
-        ([LParen(), Add(), RParen()]),
-        ([LParen(), Number(1), LParen(), Subtract(), RParen(), RParen()]),
+        (Number(5), Number(3), Add(), Add(), Add()),
+        (LParen(), Number(5), Add(), RParen()),
+        (LParen(), Add(), RParen()),
+        (LParen(), Number(1), LParen(), Subtract(), RParen(), RParen()),
     ],
 )
 def test_insufficient_operands_for_binary_op(validator: ValidatorInterface, tokens):

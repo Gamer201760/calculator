@@ -12,30 +12,27 @@ class RPNValidator:
     """
 
     def validate(self, tokens: List[Token]) -> None:
-        if not tokens:
-            raise InvalidExpressionError('Невозможно валидировать пустое выражение')
-
-        counter = 0
+        c = 0
         for token in tokens:
             if isinstance(token, Number):
-                counter += 1
+                c += 1
             elif isinstance(token, UnaryOperator):
-                if counter < 1:
+                if c < 1:
                     raise InsufficientOperandsError(
                         f'Недостаточно операндов для унарного оператора "{token.symbol}"'
                     )
             elif isinstance(token, Operator):
-                if counter < 2:
+                if c < 2:
                     raise InsufficientOperandsError(
                         f'Недостаточно операндов для бинарного оператора "{token.symbol}"'
                     )
-                counter -= 1
+                c -= 1
             elif isinstance(token, (LParen, RParen)):
                 raise InvalidExpressionError(
                     'RPNValidator не должен обрабатывать скобки'
                 )
 
-        if counter != 1:
+        if c != 1:
             raise InvalidExpressionError(
                 'Выражение некорректно: в результате должно оставаться одно значение'
             )
