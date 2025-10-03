@@ -3,6 +3,7 @@ import logging
 import pytest
 
 from domain.calculator import RPNCalculator
+from domain.error import CalculationError, InvalidExpressionError, InvalidTokenError
 from repository.infix_unary_processor import InfixUnaryProcessor
 from repository.re_parser import RegexTokenizer
 from repository.shunting_yard import ShuntingYard
@@ -10,30 +11,28 @@ from repository.validator import (
     ExpressionBoundaryValidator,
     ExpressionEmptyValidator,
     OperatorSequenceValidator,
-    ParenthesesValidator,
     RPNValidator,
-    ValidatorFactory,
 )
-from usecase.infix_calculator import InfixCalculatorUsecase
+from usecase.calculator import CalculatorUsecase
+from usecase.pipeline import ConversionStep, ProcessingStep, ValidationStep
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def calc() -> InfixCalculatorUsecase:
-    return InfixCalculatorUsecase(
+def calc() -> CalculatorUsecase:
+    pipeline = [
+        ValidationStep(ExpressionEmptyValidator()),
+        ProcessingStep(InfixUnaryProcessor()),
+        ValidationStep(ExpressionBoundaryValidator()),
+        ValidationStep(OperatorSequenceValidator()),
+        ConversionStep(ShuntingYard()),
+        ValidationStep(RPNValidator()),
+    ]
+    return CalculatorUsecase(
         tokenizer=RegexTokenizer(),
+        pipeline=pipeline,
         calculator=RPNCalculator(),
-        conveter=ShuntingYard(),
-        processor=InfixUnaryProcessor(),
-        pre_validator=ValidatorFactory(
-            [
-                ExpressionEmptyValidator(),
-                ExpressionBoundaryValidator(),
-                OperatorSequenceValidator(),
-            ]
-        ),
-        post_validator=ParenthesesValidator(RPNValidator()),
     )
 
 
@@ -86,7 +85,75 @@ def calc() -> InfixCalculatorUsecase:
         ('50 + 50 + 50 + 50 + 50 + 50 + 50 + 50 + 50 + 50', 500),
     ],
 )
-def test_calc(calc: InfixCalculatorUsecase, expr, expected):
+def test_calc(calc: CalculatorUsecase, expr, expected):
     tokens = calc.exec(expr)
     logger.debug(tokens)
     assert tokens == expected
+
+
+@pytest.mark.parametrize(
+    'expr,expected',
+    [
+        # --- Основные валидные случаи ---
+        ('1 + 2', 3),
+        ('2 + 3 * 4', 14),
+        ('5 / 2', 2.5),
+        ('( 2 + 3 ) * 4', 20),
+        # --- Унарные операторы и приоритеты ---
+        ('-2', -2.0),
+        ('-(-2)', 2.0),
+        ('-2 ^ 2', -4),
+        ('(-2) ^ 2', 4),
+        ('10 * (-5)', -50),
+    ],
+)
+def test_valid_calculations(calc: CalculatorUsecase, expr: str, expected: float):
+    """Тестирует небольшой набор валидных выражений."""
+    assert calc.exec(expr) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    'expr,expected_exception',
+    [
+        # === Ошибки Токенизации (неизвестные символы) ===
+        ('5 @ 2', InvalidTokenError),
+        ('1..2 + 3', InvalidTokenError),
+        ('abc + 5', InvalidTokenError),
+        # === Ошибки Пре-валидации (до конвертации) ===
+        # --- Пустое/некорректное выражение ---
+        ('', InvalidExpressionError),
+        ('   ', InvalidExpressionError),
+        # --- Некорректные границы выражения ---
+        ('* 5 + 2', InvalidExpressionError),
+        ('5 + 2 *', InvalidExpressionError),
+        ('5 +', InvalidExpressionError),
+        # --- Некорректная последовательность операторов ---
+        ('5 * / 2', InvalidExpressionError),
+        (
+            '5 + - 2',
+            InvalidExpressionError,
+        ),  # Бинарный плюс, затем унарный минус - корректно
+        # Но бинарный плюс и бинарный минус - нет
+        ('5 // +', InvalidExpressionError),  # Унарный плюс без числа после
+        # === Ошибки Конвертации (Shunting Yard) ===
+        # --- Несбалансированные скобки ---
+        ('(5 + 2', InvalidExpressionError),
+        ('5 + 2)', InvalidExpressionError),
+        ('5 * (', InvalidExpressionError),
+        (') 5 + 2 (', InvalidExpressionError),
+        # === Ошибки Пост-валидации (семантика RPN) ===
+        # --- Пустые скобки или лишние операнды ---
+        ('()', InvalidExpressionError),
+        ('5 6', InvalidExpressionError),
+        ('(5 6)', InvalidExpressionError),
+        # === Ошибки Времени Вычисления (Калькулятор) ===
+        ('5 / 0', CalculationError),
+        ('10 / (3 - 3)', CalculationError),
+        ('1 // 0', CalculationError),
+        ('1 % 0', CalculationError),
+    ],
+)
+def test_errors(calc: CalculatorUsecase, expr: str, expected_exception: type):
+    """Тестирует различные некорректные выражения и ожидаемые типы ошибок."""
+    with pytest.raises(expected_exception):
+        calc.exec(expr)
