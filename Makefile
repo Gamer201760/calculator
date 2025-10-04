@@ -14,13 +14,13 @@ install:
 	uv sync
 
 test:
-	pytest -v
+	uv run pytest -v
 
 lint:
-	ruff check .
+	uv run ruff check .
 
 typecheck:
-	mypy .
+	uv run mypy .
 
 infix:
 	uv run main.py 
