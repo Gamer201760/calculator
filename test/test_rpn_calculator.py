@@ -1,6 +1,7 @@
 import pytest
 
 from domain.calculator import RPNCalculator
+from domain.error import CalculationError
 from domain.operator import Add, Divide, IntegerDivide, Modulo, Multiply, Pow, Subtract
 from domain.token import Number
 from domain.unary import UnaryMinus, UnaryPlus
@@ -136,3 +137,14 @@ def test_edge_cases(calc, expr, expected):
 )
 def test_special_values(calc, expr, expected):
     assert calc.calculate(expr) == pytest.approx(expected, rel=1e-9)
+
+
+@pytest.mark.parametrize(
+    'expr',
+    [
+        (Number(1e10), Number(1e10), Pow()),
+    ],
+)
+def test_calculation_error(calc, expr):
+    with pytest.raises(CalculationError):
+        calc.calculate(expr)

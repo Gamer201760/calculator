@@ -93,6 +93,7 @@ def test_calc(calc: CalculatorUsecase, expr, expected):
         ('10 3 3 - /', CalculationError),
         ('1 0 //', CalculationError),
         ('1 0 %', CalculationError),
+        ('100000000 1000000 ^', CalculationError),
     ],
 )
 def test_errors(calc: CalculatorUsecase, expr: str, expected_exception: type):
