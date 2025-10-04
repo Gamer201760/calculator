@@ -26,8 +26,18 @@ from usecase.pipeline import (
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog='Calculator',
+        formatter_class=argparse.RawTextHelpFormatter,
+        description="""
+Консольный калькулятор для вычисления математических выражений
+Поддерживает два режима: стандартную инфиксную нотацию (по умолчанию)
+и обратную польскую нотацию (RPN)
+        """,
     )
-    parser.add_argument('--rpn', action='store_true')
+    parser.add_argument(
+        '--rpn',
+        action='store_true',
+        help='Запустить калькулятор в Обратной Польской Нотации (RPN)',
+    )
     args = parser.parse_args()
 
     infix_pipeline: List[PipelineStepInterface] = [
