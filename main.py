@@ -24,12 +24,12 @@ from usecase.pipeline import (
 
 
 def main() -> None:
-    """Точка входа в программу"""
     parser = argparse.ArgumentParser(
         prog='Calculator',
     )
     parser.add_argument('--rpn', action='store_true')
     args = parser.parse_args()
+
     infix_pipeline: List[PipelineStepInterface] = [
         ValidationStep(ExpressionEmptyValidator()),
         ProcessingStep(InfixUnaryProcessor()),
