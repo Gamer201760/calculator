@@ -144,6 +144,5 @@ def test_calc(calc: CalculatorUsecase, expr, expected):
     ],
 )
 def test_errors(calc: CalculatorUsecase, expr: str, expected_exception: type):
-    """Тестирует различные некорректные выражения и ожидаемые типы ошибок."""
     with pytest.raises(expected_exception):
         calc.exec(expr)
