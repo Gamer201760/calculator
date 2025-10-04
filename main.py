@@ -40,25 +40,48 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    infix_pipeline: List[PipelineStepInterface] = [
-        ValidationStep(ExpressionEmptyValidator()),
-        ProcessingStep(InfixUnaryProcessor()),
-        ValidationStep(ExpressionBoundaryValidator()),
-        ValidationStep(OperatorSequenceValidator()),
-        ConversionStep(ShuntingYard()),
-        ValidationStep(RPNValidator()),
-    ]
-    rpn_pipeline: List[PipelineStepInterface] = [
-        ValidationStep(ExpressionEmptyValidator()),
-        ValidationStep(ParenthesesValidator(RPNValidator())),
-        ProcessingStep(RemoveParenProcessor()),
-    ]
+    pipeline: List[PipelineStepInterface]
+    if args.rpn:
+        pipeline = [
+            ValidationStep(ExpressionEmptyValidator()),
+            ValidationStep(ParenthesesValidator(RPNValidator())),
+            ProcessingStep(RemoveParenProcessor()),
+        ]
+        description = """
+Добро пожаловать в Калькулятор! (Режим Обратной Польской Нотации - RPN)
+
+Введите выражение, где сначала идут операнды (числа), а затем оператор.
+
+- Для унарного минуса используйте символ '~' (тильда).
+- Для унарного плюса используйте символ '$'.
+
+Для выхода введите 'exit' или 'quit'.
+
+Пример 1: 5 2 3 + *  (инфиксная запись '5 * (2 + 3)')
+Пример 2: 10 4 ~ -   (инфиксная запись '10 - (-4)')"""
+    else:
+        pipeline = [
+            ValidationStep(ExpressionEmptyValidator()),
+            ProcessingStep(InfixUnaryProcessor()),
+            ValidationStep(ExpressionBoundaryValidator()),
+            ValidationStep(OperatorSequenceValidator()),
+            ConversionStep(ShuntingYard()),
+            ValidationStep(RPNValidator()),
+        ]
+        description = """
+Добро пожаловать в Калькулятор! (Режим Инфиксной Нотации)
+
+Введите выражение в стандартной математической форме, используя операторы +, -, *, /, ^, //, % и скобки.
+Для выхода введите 'exit' или 'quit'.
+
+Пример: 5 * (-2 + 8) / 2"""
+
     calculator = CalculatorUsecase(
         tokenizer=RegexTokenizer(),
-        pipeline=rpn_pipeline if args.rpn else infix_pipeline,
+        pipeline=pipeline,
         calculator=RPNCalculator(),
     )
-    cli = CliCalculator(calculator)
+    cli = CliCalculator(calculator, description)
     cli.run()
 
 

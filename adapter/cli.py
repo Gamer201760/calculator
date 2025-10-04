@@ -7,11 +7,13 @@ class CliCalculator:
     CLI Адаптер для калькулятора
     """
 
-    def __init__(self, calculator: CalculatorUsecase):
+    def __init__(self, calculator: CalculatorUsecase, description: str):
         self._calculator = calculator
+        self._description = description
 
     def run(self):
         """Запускает основной цикл приложения"""
+        print(self._description)
 
         while True:
             try:
